@@ -3,7 +3,7 @@ package entity;
 /**
  * @author inta
  * @date 2019/3/21
- * @describe 返回码定义类
+ * @describe 返回状态码定义类
  */
 public class StatusCode {
     public static final int OK=20000;//成功
