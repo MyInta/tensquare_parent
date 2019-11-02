@@ -11,9 +11,12 @@
         <module name="tensquare_common" />
         <module name="tensquare_gathering" />
         <module name="tensquare_qa" />
+        <module name="tensquare_rabbitmq_test" />
         <module name="tensquare_recruit" />
         <module name="tensquare_search" />
+        <module name="tensquare_sms" />
         <module name="tensquare_spit" />
+        <module name="tensquare_user" />
       </profile>
     </annotationProcessing>
   </component>
