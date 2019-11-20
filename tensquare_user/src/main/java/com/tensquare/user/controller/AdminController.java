@@ -1,4 +1,5 @@
 package com.tensquare.user.controller;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,8 @@ import com.tensquare.user.service.AdminService;
 import entity.PageResult;
 import entity.Result;
 import entity.StatusCode;
+import util.JwtUtil;
+
 /**
  * 控制器层
  * @author Administrator
@@ -29,14 +32,21 @@ public class AdminController {
 	@Autowired
 	private AdminService adminService;
 
+	@Autowired
+	private JwtUtil jwtUtil;
+
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public Result login(@RequestBody Admin admin) {
 		Admin adminLogin = adminService.login(admin);
 		if (adminLogin == null) {
 			return new Result(false, StatusCode.LOGINERROR, "登录失败");
 		}
-		//TODO 使得前后端可以通话的操作 采用JWT实现
-		return new Result(true, StatusCode.OK, "登陆成功");
+		//生成令牌
+		String token = jwtUtil.createJWT(adminLogin.getId(), adminLogin.getLoginname(), "admin");
+		Map<String, Object> map = new HashMap<>();
+		map.put("token", token);
+		map.put("role", "admin");
+		return new Result(true, StatusCode.OK, "登陆成功", map);
 	}
 	
 	/**

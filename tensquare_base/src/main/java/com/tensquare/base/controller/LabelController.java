@@ -6,9 +6,12 @@ import entity.PageResult;
 import entity.Result;
 import entity.StatusCode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -19,13 +22,30 @@ import java.util.List;
 @RestController
 @CrossOrigin
 @RequestMapping("/label")
+@RefreshScope
 public class LabelController {
 
     @Autowired
     private LabelService labelService;
 
+    @Autowired
+    private HttpServletRequest request;
+
+    @Value("${testIpAddress}")
+    private String testIpAddress;
+
+    @RequestMapping(value = "/ip", method = RequestMethod.GET)
+    public String getTestIpAddress() {
+        //测试注释refreshscope以及使用bus之后，修改配置文件，是否可以更新自定义的信息而不用重启
+        return testIpAddress;
+    }
+
     @RequestMapping(method = RequestMethod.GET)
     public Result findAll() {
+        //获取头信息
+        String header = request.getHeader("MyIntaAuthorizationNeedHeader");
+        System.out.println(header);
+
         return new Result(true, StatusCode.OK, "查询成功", labelService.findAll());
     }
 

@@ -5,23 +5,20 @@ import java.util.concurrent.TimeUnit;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Selection;
 
-import com.mysql.cj.util.TimeUtil;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import org.springframework.transaction.annotation.Transactional;
 import util.IdWorker;
 
 import com.tensquare.user.dao.UserDao;
@@ -95,6 +92,7 @@ public class UserService {
 
 	/**
 	 * 增加
+	 * TODO 需要考虑事务了，因为同一号码不能多次注册，数据库操作会出异常
 	 * @param user
 	 */
 	public void add(User user) {
@@ -206,5 +204,11 @@ public class UserService {
 			return user;
 		}
 		return null;
+	}
+
+	@Transactional
+	public void updatefanscountandfollowcount(int x, String userid, String friendid) {
+		userDao.updatefanscount(x, userid);
+		userDao.updatefollowcount(x, friendid);
 	}
 }

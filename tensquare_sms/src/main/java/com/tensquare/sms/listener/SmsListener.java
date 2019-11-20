@@ -35,7 +35,7 @@ public class SmsListener {
         System.out.println("手机号：" + map.get("mobile"));
         System.out.println("验证码：" + map.get("checkcode"));
         try {
-            smsUtil.sendSms(mobile, template_code, sign_name, "{\"checkcode\":\""+checkcode+"\"}");
+            smsUtil.sendSms(mobile, template_code, sign_name, "{\"code\" : \"" + checkcode + "\"}");
         } catch (ClientException e) {
             e.printStackTrace();
         }
