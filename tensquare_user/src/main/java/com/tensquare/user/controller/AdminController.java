@@ -45,7 +45,7 @@ public class AdminController {
 		String token = jwtUtil.createJWT(adminLogin.getId(), adminLogin.getLoginname(), "admin");
 		Map<String, Object> map = new HashMap<>();
 		map.put("token", token);
-		map.put("role", "admin");
+		map.put("name", admin.getLoginname());
 		return new Result(true, StatusCode.OK, "登陆成功", map);
 	}
 	

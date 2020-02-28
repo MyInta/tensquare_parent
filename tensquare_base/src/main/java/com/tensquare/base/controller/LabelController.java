@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author inta
@@ -75,15 +76,27 @@ public class LabelController {
         return new Result(true, StatusCode.OK, "删除成功");
     }
 
+    /**
+     * 根据条件查询
+     * @param searchMap
+     * @return
+     */
     @RequestMapping(value = "/search", method = RequestMethod.POST)
-    public Result findSearch(@RequestBody Label label) {
-        List<Label> list = labelService.findSearch(label);
+    public Result findSearch(@RequestBody Map searchMap) {
+        List<Label> list = labelService.findSearch(searchMap);
         return new Result(true, StatusCode.OK, "查询成功", list);
     }
 
+    /**
+     * 条件 + 分页查询
+     * @param searchMap
+     * @param page
+     * @param size
+     * @return
+     */
     @RequestMapping(value = "/search/{page}/{size}", method = RequestMethod.POST)
-    public Result pageQuery(@RequestBody Label label, @PathVariable int page, @PathVariable int size) {
-        Page<Label> pageData = labelService.pageQuery(label, page, size);
+    public Result findSearch(@RequestBody Map searchMap, @PathVariable int page, @PathVariable int size) {
+        Page pageData = labelService.findSearch(searchMap, page, size);
         return new Result(true, StatusCode.OK, "查询成功",
                 new PageResult<Label>(pageData.getTotalElements(), pageData.getContent()));
     }

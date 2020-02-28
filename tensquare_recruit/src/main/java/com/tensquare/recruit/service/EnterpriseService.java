@@ -39,6 +39,11 @@ public class EnterpriseService {
 	@Autowired
 	private IdWorker idWorker;
 
+	/**
+	 * 热门企业列表
+	 * @param ishot
+	 * @return
+	 */
 	public List<Enterprise> hotList (String ishot) {
 		return enterpriseDao.findByIshot(ishot);
 	}

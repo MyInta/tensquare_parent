@@ -31,7 +31,8 @@ public class RecruitController {
 
 	@RequestMapping(value = "/search/recommend", method = RequestMethod.GET)
 	public Result recommend() {
-		return new Result(true, StatusCode.OK, "查询成功", recruitService.recommend());
+		return new Result(true, StatusCode.OK, "查询成功",
+				recruitService.findTop6ByStateOrderByCreatetimeDesc("2"));
 	}
 
 	@RequestMapping(value = "/search/newlist", method = RequestMethod.GET)

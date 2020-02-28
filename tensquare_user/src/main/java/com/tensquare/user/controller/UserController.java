@@ -46,6 +46,26 @@ public class UserController {
 	private HttpServletRequest request;
 
 	/**
+	 * 增加粉丝数
+	 * @param userid
+	 * @param x
+	 */
+	@RequestMapping(value = "/incfans/{userid}/{x}", method = RequestMethod.PUT)
+	public void updateFansCount(@PathVariable String userid, @PathVariable int x) {
+		userService.incFanscount(userid, x);
+	}
+
+	/**
+	 * 增加关注数
+	 * @param userid
+	 * @param x
+	 */
+	@RequestMapping(value = "/incfol/{userid}/{x}", method = RequestMethod.PUT)
+	public void updateFollowCount(@PathVariable String userid, @PathVariable int x) {
+		userService.incFollowCount(userid, x);
+	}
+
+	/**
 	 * 更新好友粉丝数和用户关注数
 	 * @param x
 	 * @param userid
@@ -53,7 +73,7 @@ public class UserController {
 	 */
 	@RequestMapping(value = "/{userid}/{friendid}/{x}", method = RequestMethod.PUT)
 	public void updatefanscountandfollowscount(@PathVariable String userid, @PathVariable String friendid, @PathVariable int x) {
-		userService.updatefanscountandfollowcount(x, userid, friendid);
+		userService.updateFansCountAndFollowCount(x, userid, friendid);
 	}
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -65,7 +85,8 @@ public class UserController {
 		String token = jwtUtil.createJWT(user.getId(), user.getMobile(), "user");
 		Map<String, Object> map = new HashMap<>();
 		map.put("token", token);
-		map.put("roles","user");
+		map.put("name", user.getNickname());//昵称
+		map.put("avatar", user.getAvatar());//头像
 		return new Result(true, StatusCode.OK, "登陆成功", map);
 	}
 
@@ -87,14 +108,7 @@ public class UserController {
 	 */
 	@RequestMapping(value = "/register/{code}", method = RequestMethod.POST)
 	public Result regist(@PathVariable String code, @RequestBody User user) {
-		String checkcodeRedis = (String) redisTemplate.opsForValue().get("checkcode_" + user.getMobile());
-		if (checkcodeRedis.isEmpty()) {
-			return new Result(false, StatusCode.ERROR, "请先获取手机验证码");
-		}
-		if (!checkcodeRedis.equals(code)) {
-			return new Result(false, StatusCode.ERROR, "请输入正确的手机验证码");
-		}
-		userService.add(user);
+		userService.registUser(user, code);
 		return new Result(true, StatusCode.OK, "注册成功");
 	}
 	
@@ -168,7 +182,7 @@ public class UserController {
 	 */
 	@RequestMapping(value="/{id}",method= RequestMethod.DELETE)
 	public Result delete(@PathVariable String id ){
-		String token = (String) request.getAttribute("claims_admin");
+		Claims token = (Claims) request.getAttribute("claims_admin");
 		if (token == null || "".equals(token)) {
 			return new Result(false, StatusCode.ACCESSERROR,"权限不足");
 		}

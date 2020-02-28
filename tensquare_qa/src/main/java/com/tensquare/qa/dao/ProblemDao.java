@@ -17,7 +17,7 @@ import java.util.List;
  */
 public interface ProblemDao extends JpaRepository<Problem,String>,JpaSpecificationExecutor<Problem>{
 
-    //最新
+    //根据标签id查询最新问题列表，返回分页
     @Query(value = "SELECT * FROM tb_problem, tb_pl WHERE id = problemid AND labelid = ? ORDER BY replytime DESC", nativeQuery = true)
     public Page<Problem> newlist(String labelid, Pageable pageable);
 

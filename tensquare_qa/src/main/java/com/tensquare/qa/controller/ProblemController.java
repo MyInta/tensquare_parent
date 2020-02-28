@@ -3,6 +3,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.tensquare.qa.client.BaseClient;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -49,19 +50,22 @@ public class ProblemController {
 	@RequestMapping(value = "/newlist/{labelid}/{page}/{size}", method = RequestMethod.GET)
 	public Result newlist(@PathVariable String labelid, @PathVariable int page, @PathVariable int size) {
 		Page<Problem> pageData = problemService.newlist(labelid, page, size);
-		return new Result(true, StatusCode.OK, "查询成功", new PageResult<Problem>(pageData.getTotalElements(), pageData.getContent()));
+		return new Result(true, StatusCode.OK, "查询成功",
+				new PageResult<Problem>(pageData.getTotalElements(), pageData.getContent()));
 	}
 
 	@RequestMapping(value = "/hotlist/{labelid}/{page}/{size}", method = RequestMethod.GET)
 	public Result hotlist(@PathVariable String labelid, @PathVariable int page, @PathVariable int size) {
 		Page<Problem> pageData = problemService.hotlist(labelid, page, size);
-		return new Result(true, StatusCode.OK, "查询成功", new PageResult<Problem>(pageData.getTotalElements(), pageData.getContent()));
+		return new Result(true, StatusCode.OK, "查询成功",
+				new PageResult<Problem>(pageData.getTotalElements(), pageData.getContent()));
 	}
 
 	@RequestMapping(value = "/waitlist/{labelid}/{page}/{size}", method = RequestMethod.GET)
 	public Result waitlist(@PathVariable String labelid, @PathVariable int page, @PathVariable int size) {
 		Page<Problem> pageData = problemService.waitlist(labelid, page, size);
-		return new Result(true, StatusCode.OK, "查询成功", new PageResult<Problem>(pageData.getTotalElements(), pageData.getContent()));
+		return new Result(true, StatusCode.OK, "查询成功",
+				new PageResult<Problem>(pageData.getTotalElements(), pageData.getContent()));
 	}
 
 	/**
@@ -94,7 +98,8 @@ public class ProblemController {
 	@RequestMapping(value="/search/{page}/{size}",method=RequestMethod.POST)
 	public Result findSearch(@RequestBody Map searchMap , @PathVariable int page, @PathVariable int size){
 		Page<Problem> pageList = problemService.findSearch(searchMap, page, size);
-		return  new Result(true,StatusCode.OK,"查询成功",  new PageResult<Problem>(pageList.getTotalElements(), pageList.getContent()) );
+		return  new Result(true,StatusCode.OK,"查询成功",
+				new PageResult<Problem>(pageList.getTotalElements(), pageList.getContent()) );
 	}
 
 	/**
@@ -113,10 +118,12 @@ public class ProblemController {
 	 */
 	@RequestMapping(method=RequestMethod.POST)
 	public Result add(@RequestBody Problem problem  ){
-		String token = (String) request.getAttribute("claims_user");
+		Claims token = (Claims) request.getAttribute("claims_user");
 		if (token == null || "".equals(token)) {
 			return new Result(false, StatusCode.ACCESSERROR,"权限不足");
 		}
+		//给问题加上id
+		problem.setUserid(token.getId());
 		problemService.add(problem);
 		return new Result(true,StatusCode.OK,"增加成功");
 	}

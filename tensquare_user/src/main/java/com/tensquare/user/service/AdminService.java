@@ -43,7 +43,11 @@ public class AdminService {
 	@Autowired
 	private  BCryptPasswordEncoder encoder;
 
-
+	/**
+	 * 根据用户中的登录名和密码进行查询
+	 * @param admin
+	 * @return
+	 */
 	public Admin login(Admin admin) {
 		//先根据用户名查询对象
 		Admin adminLogin = adminDao.findByLoginname(admin.getLoginname());

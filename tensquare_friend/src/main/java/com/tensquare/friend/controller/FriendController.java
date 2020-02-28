@@ -53,7 +53,7 @@ public class FriendController {
                 if (flag == 0) {
                     return new Result(false, StatusCode.ERROR, "不能重复添加好友");
                 } else if (flag == 1) {
-                    userClient.updatefanscountandfollowscount(userid, friendid, 1);
+                    userClient.updateFansCountAndFollowCount(userid, friendid, 1);
                     return new Result(true, StatusCode.OK, "添加成功");
                 } else {
                     return new Result(false, StatusCode.ERROR, "flag参数异常");
@@ -75,8 +75,13 @@ public class FriendController {
         }
     }
 
+    /**
+     * 删除好友 通过token里获取当前用户id
+     * @param friendid
+     * @return
+     */
     @RequestMapping(value = "/{friendid}", method = RequestMethod.DELETE)
-    public Result addFriend(@PathVariable String friendid) {
+    public Result deleteFriend(@PathVariable String friendid) {
         //验证是否登录，并且拿到当前登录的用户id
         Claims claims = (Claims) request.getAttribute("claims_user");
         if (claims == null || "".equals(claims)) {
@@ -86,7 +91,7 @@ public class FriendController {
         //获得当前用户id
         String userid = claims.getId();
         friendService.deleteFriend(userid, friendid);
-        userClient.updatefanscountandfollowscount(userid, friendid, -1);
+        userClient.updateFansCountAndFollowCount(userid, friendid, -1);
         return new Result(true, StatusCode.OK, "删除好友成功");
     }
 }

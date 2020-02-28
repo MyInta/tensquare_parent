@@ -15,9 +15,10 @@ import java.util.Date;
 @ConfigurationProperties("jwt.config")
 public class JwtUtil {
 
+    //密钥
     private String key ;
 
-    private long ttl ;//一个小时
+    private long ttl ;//设一个时间
 
     public String getKey() {
         return key;
@@ -44,20 +45,22 @@ public class JwtUtil {
      */
     public String createJWT(String id, String subject, String roles) {
         long nowMillis = System.currentTimeMillis();
-        Date now = new Date(nowMillis);
-        JwtBuilder builder = Jwts.builder().setId(id)
+        Date now = new Date(nowMillis);//当前时间
+        JwtBuilder builder = Jwts.builder()
+                .setId(id)
                 .setSubject(subject)
-                .setIssuedAt(now)
-                .signWith(SignatureAlgorithm.HS256, key).claim("roles", roles);
+                .setIssuedAt(now)//设置签发时间
+                .signWith(SignatureAlgorithm.HS256, key)//设置签名密钥
+                .claim("roles", roles);//申明一个key实际意义为用户类别（管理员、普通用户...）
         if (ttl > 0) {
-            builder.setExpiration( new Date( nowMillis + ttl));
+            builder.setExpiration( new Date( nowMillis + ttl));//当前时间往后加ttl时间
         }
         return builder.compact();
     }
 
     /**
      * 解析JWT
-     * @param jwtStr
+     * @param jwtStr 即 token
      * @return
      */
     public Claims parseJWT(String jwtStr){

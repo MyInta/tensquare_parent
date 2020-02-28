@@ -109,6 +109,22 @@ public class UserService {
 	}
 
 	/**
+	 * 根据验证码注册用户
+	 * @param user
+	 * @param code
+	 */
+	public void registUser(User user, String code) {
+		String userCheckCode = (String) redisTemplate.opsForValue().get("checkcode_" + user.getMobile());
+		if (userCheckCode == null || userCheckCode.isEmpty()) {
+			throw new RuntimeException("请先获取手机验证码");
+		}
+		if (!userCheckCode.equals(code)) {
+			throw new RuntimeException("验证码错误");
+		}
+		userDao.save(user);
+	}
+
+	/**
 	 * 修改
 	 * @param user
 	 */
@@ -187,7 +203,7 @@ public class UserService {
     public void sedSms(String mobile) {
 		//生成6位数字随机数
 		String checkcode = RandomStringUtils.randomNumeric(6);
-		//向缓存中存一份
+		//向缓存中存一份 后两个参数指定6小时后过期
 		redisTemplate.opsForValue().set("checkcode_" + mobile, checkcode, 6, TimeUnit.HOURS);
 		Map<String, String> map = new HashMap<>();
 		map.put("mobile", mobile);
@@ -206,9 +222,29 @@ public class UserService {
 		return null;
 	}
 
+	/**
+	 * 增加粉丝
+	 * @param userid
+	 * @param x
+	 */
 	@Transactional
-	public void updatefanscountandfollowcount(int x, String userid, String friendid) {
-		userDao.updatefanscount(x, userid);
-		userDao.updatefollowcount(x, friendid);
+	public void incFanscount(String userid, int x) {
+    	userDao.updatefanscount(x, userid);
+	}
+
+	/**
+	 * 增加粉丝
+	 * @param userid
+	 * @param x
+	 */
+	@Transactional
+	public void incFollowCount(String userid, int x) {
+    	userDao.updatefollowcount(x, userid);
+	}
+
+	@Transactional
+	public void updateFansCountAndFollowCount(int x, String userid, String friendid) {
+		incFanscount(userid, x);
+		incFollowCount(friendid, x);
 	}
 }

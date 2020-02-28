@@ -11,8 +11,15 @@ import org.springframework.data.jpa.repository.Query;
  * @describe
  */
 public interface FriendDao extends JpaRepository<Friend, String> {
+
     public Friend findByUseridAndFriendid(String userid, String friendid);
 
+    /**
+     * 更新为互相喜欢
+     * @param islike
+     * @param userid
+     * @param friendid
+     */
     @Modifying
     @Query(value = "UPDATE `tb_friend` SET islike = ? WHERE userid = ? AND friendid = ?", nativeQuery = true)
     public void updateIsLike(String islike, String userid, String friendid);

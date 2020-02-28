@@ -41,10 +41,10 @@ public class ProblemService {
 	private IdWorker idWorker;
 
 	/**
-	 * 最新问题
-	 * @param labelid
-	 * @param page
-	 * @param rows
+	 * 根据标签id查询最新问题
+	 * @param labelid 标签id
+	 * @param page	页码
+	 * @param rows	页大小
 	 * @return
 	 */
 	public Page<Problem> newlist(String labelid, int page, int rows) {
@@ -53,7 +53,7 @@ public class ProblemService {
 	}
 
 	/**
-	 * 热门问题
+	 * 根据标签id查询热门问题
 	 * @param labelid
 	 * @param page
 	 * @param rows
@@ -65,7 +65,7 @@ public class ProblemService {
 	}
 
 	/**
-	 * 等待回复的问题
+	 * 根据id查询等待回复的问题列表
 	 * @param labelid
 	 * @param page
 	 * @param rows

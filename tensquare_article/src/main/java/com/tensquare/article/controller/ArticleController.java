@@ -30,6 +30,11 @@ public class ArticleController {
 	@Autowired
 	private ArticleService articleService;
 
+	/**
+	 * 审核通过就更新
+	 * @param articleId
+	 * @return
+	 */
 	@RequestMapping(value = "/examine/{articleId}", method = RequestMethod.PUT)
 	public Result examine(@PathVariable String articleId) {
 		articleService.updateState(articleId);

@@ -66,11 +66,11 @@ public class SpitController {
         ///判断当前用户是否已经点赞，目前没有做认证，暂时将Userid写死
         String userid = "111";
         //判断当前用户是否已经点赞
-        if (redisTemplate.opsForValue().get("thumbup_" + userid) != null) {
+        if (redisTemplate.opsForValue().get("thumbup_" + userid + "_" + spitId) != null) {
             return new Result(false, StatusCode.ERROR, "重复点赞");
         }
         spitService.thumbup(spitId);
-        redisTemplate.opsForValue().set("thumbup_" + userid, 1);
+        redisTemplate.opsForValue().set("thumbup_" + userid + "_" + spitId, 1);
         return new Result(true, StatusCode.OK, "点赞成功");
     }
 }

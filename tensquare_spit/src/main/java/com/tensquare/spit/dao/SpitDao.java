@@ -11,5 +11,11 @@ import org.springframework.data.mongodb.repository.MongoRepository;
  * @describe
  */
 public interface SpitDao extends MongoRepository<Spit, String> {
+    /**
+     * 分页形式，根据id返回查询列表
+     * @param parentid
+     * @param pageable
+     * @return
+     */
     public Page<Spit> findByParentid(String parentid, Pageable pageable);
 }
